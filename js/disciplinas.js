@@ -25,9 +25,6 @@ var Disciplinas = (function() {
         }
 
         registros.forEach(reg => {
-            const prof = professores.find(p => p.id == reg.professorId);
-            const profNome = prof ? prof.nome : 'Desconhecido';
-            
             const cur = cursos.find(c => c.id == reg.cursoId);
             const curNome = cur ? cur.nome : (reg.curso || 'Desconhecido');
 
@@ -42,7 +39,6 @@ var Disciplinas = (function() {
                     <td>${reg.nome}</td>
                     <td>${curNome}</td>
                     <td>${turNome}</td>
-                    <td>${profNome}</td>
                     <td>${reg.cargaHoraria}h</td>
                     <td>${horario}</td>
                     <td class="action-btns">
@@ -59,15 +55,10 @@ var Disciplinas = (function() {
 
     // Carrega todos os selects do formulário com dados do BD Mock
     function carregarSelects() {
-        const profs = BD.lerTodos('professores');
         const alunos = BD.lerTodos('alunos');
         const cursos = BD.lerTodos('cursos');
         const turmas = BD.lerTodos('turmas');
 
-        const $selectProf = $('#disc-prof');
-        $selectProf.empty().append('<option value="">Selecione um Professor...</option>');
-        profs.forEach(p => $selectProf.append(`<option value="${p.id}">${p.nome}</option>`));
-        
         const $selectCurso = $('#disc-curso');
         $selectCurso.empty().append('<option value="">Selecione um Curso...</option>');
         cursos.forEach(c => $selectCurso.append(`<option value="${c.id}">${c.nome}</option>`));
@@ -95,7 +86,6 @@ var Disciplinas = (function() {
                 $('#disc-nome').val(reg.nome);
                 $('#disc-curso').val(reg.cursoId);
                 $('#disc-turma').val(reg.turmaId);
-                $('#disc-prof').val(reg.professorId);
                 $('#disc-sala').val(reg.sala);
                 $('#disc-ch').val(reg.cargaHoraria);
                 $('#disc-horario-inicio').val(reg.horarioInicio || '');
@@ -127,7 +117,6 @@ var Disciplinas = (function() {
             nome: $('#disc-nome').val(),
             cursoId: parseInt($('#disc-curso').val()),
             turmaId: parseInt($('#disc-turma').val()),
-            professorId: parseInt($('#disc-prof').val()),
             sala: $('#disc-sala').val(),
             cargaHoraria: parseInt($('#disc-ch').val()),
             horarioInicio: $('#disc-horario-inicio').val(),

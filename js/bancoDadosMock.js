@@ -2,10 +2,18 @@
 
 /**
  * Serviço responsável por simular um banco de dados utilizando LocalStorage
+ * Agora com suporte Multi-tenant (isolamento por usuário)
  */
 const BD = {
+    tabelasComuns: ['unidades', 'cursos', 'usuarios'], // Tabelas que não são isoladas por usuário
+
     // Inicializa dados falsos caso não existam no LocalStorage
     inicializar: function() {
+        // Se ainda existir a tabela antiga 'professores', fazemos um hard reset para o novo modelo multi-tenant
+        if (localStorage.getItem('professores')) {
+            localStorage.clear();
+        }
+
         if (!localStorage.getItem('unidades')) {
             localStorage.setItem('unidades', JSON.stringify([
                 { id: 1, nome: 'Campus Central', endereco: 'Av. Principal, 1000', cidade: 'São Paulo', uf: 'SP' },
@@ -19,64 +27,32 @@ const BD = {
                 { id: 2, nome: 'Sistemas de Informação', coordenador: 'Ada Lovelace', unidadeId: 1 }
             ]));
         }
-
-        if (!localStorage.getItem('professores')) {
-            localStorage.setItem('professores', JSON.stringify([
-                { id: 1, nome: 'João Silva', email: 'joao.silva@pong.edu', telefone: '(11) 98765-4321' },
-                { id: 2, nome: 'Maria Santos', email: 'maria.santos@pong.edu', telefone: '(11) 91234-5678' }
-            ]));
-        }
         
-        if (!localStorage.getItem('alunos')) {
-            localStorage.setItem('alunos', JSON.stringify([
-                { id: 1, nome: 'Pedro Álvares', matricula: '2023001', email: 'pedro@aluno.edu', telefone: '(11) 99999-1111' },
-                { id: 2, nome: 'Ana Costa', matricula: '2023002', email: 'ana@aluno.edu', telefone: '(11) 98888-2222' }
-            ]));
-        }
+        // Dados de teste para alunos, turmas, etc. não serão gerados no init para evitar bagunça
+        // entre os usuários. Cada usuário criará os seus dados.
+    },
 
-        if (!localStorage.getItem('turmas')) {
-            localStorage.setItem('turmas', JSON.stringify([
-                { id: 1, turno: 'Matutino', codigo: 'TMA01', curso: 'Ciência da Computação', unidade: 'Campus Central' },
-                { id: 2, turno: 'Noturno', codigo: 'TNO01', curso: 'Sistemas de Informação', unidade: 'Campus Central' }
-            ]));
-        }
-
-        if (!localStorage.getItem('disciplinas')) {
-            localStorage.setItem('disciplinas', JSON.stringify([
-                { 
-                    id: 1, 
-                    nome: 'Lógica de Programação', 
-                    cursoId: 1,
-                    turmaId: 1,
-                    professorId: 1, 
-                    alunosIds: [1, 2],
-                    descricao: 'Introdução aos Algoritmos e Estruturas de Controle',
-                    cargaHoraria: 60,
-                    sala: 'Lab 01',
-                    horarioInicio: '08:00',
-                    horarioFim: '10:00',
-                    notas: {
-                        '1': { av1: 8.5, av2: 7.0, reposicao: null, final: 7.75 },
-                        '2': { av1: 6.0, av2: 5.5, reposicao: 8.0, final: 7.0 }
-                    }
-                }
-            ]));
-        }
-
-        if (!localStorage.getItem('planosAula')) {
-            localStorage.setItem('planosAula', JSON.stringify([
-                { id: 1, disciplinaId: 1, titulo: 'Aula 01 - Introdução a Algoritmos', descricao: 'Conceitos básicos de lógica de programação e algoritmos.', data: '2026-09-10', status: 'agendada' },
-                { id: 2, disciplinaId: 1, titulo: 'Aula 02 - Variáveis e Tipos',        descricao: 'Estudo de variáveis, tipos de dados e operadores.',           data: '2026-09-17', status: 'agendada' }
-            ]));
-        }
+    getUsuarioAtivo: function() {
+        return parseInt(localStorage.getItem('sessao_ativa'));
     },
 
     // Ler todos os registros de uma tabela
     lerTodos: function(tabela) {
-        return JSON.parse(localStorage.getItem(tabela)) || [];
+        const registros = JSON.parse(localStorage.getItem(tabela)) || [];
+        
+        // Se for tabela comum, retorna tudo
+        if (this.tabelasComuns.includes(tabela)) {
+            return registros;
+        }
+        
+        // Se for tabela isolada, filtra pelo usuário ativo
+        const usuarioId = this.getUsuarioAtivo();
+        if (!usuarioId) return [];
+        
+        return registros.filter(reg => reg.usuarioId === usuarioId);
     },
 
-    // Ler um registro por ID
+    // Ler um registro por ID (já respeitando o isolamento via lerTodos)
     lerPorId: function(tabela, id) {
         const registros = this.lerTodos(tabela);
         return registros.find(reg => reg.id == id);
@@ -84,31 +60,60 @@ const BD = {
 
     // Criar um novo registro
     criar: function(tabela, dados) {
-        const registros = this.lerTodos(tabela);
-        const novoId = registros.length > 0 ? Math.max(...registros.map(r => r.id)) + 1 : 1;
+        // Lê do localStorage inteiro para gerar ID sequencial
+        const todosRegistros = JSON.parse(localStorage.getItem(tabela)) || [];
+        const novoId = todosRegistros.length > 0 ? Math.max(...todosRegistros.map(r => r.id)) + 1 : 1;
+        
         const novoRegistro = { id: novoId, ...dados };
-        registros.push(novoRegistro);
-        localStorage.setItem(tabela, JSON.stringify(registros));
+        
+        // Se for tabela isolada, injeta o usuarioId
+        if (!this.tabelasComuns.includes(tabela)) {
+            novoRegistro.usuarioId = this.getUsuarioAtivo();
+        }
+        
+        todosRegistros.push(novoRegistro);
+        localStorage.setItem(tabela, JSON.stringify(todosRegistros));
+        
         return novoRegistro;
     },
 
     // Atualizar um registro existente
     atualizar: function(tabela, id, dados) {
-        let registros = this.lerTodos(tabela);
-        const index = registros.findIndex(reg => reg.id == id);
-        if (index !== -1) {
-            registros[index] = { ...registros[index], ...dados, id: parseInt(id) };
-            localStorage.setItem(tabela, JSON.stringify(registros));
-            return registros[index];
+        // Lê do localStorage inteiro para salvar corretamente
+        let todosRegistros = JSON.parse(localStorage.getItem(tabela)) || [];
+        
+        // Validação de isolamento: verificar se o ID pertence ao usuário (ou se é tabela comum)
+        if (!this.tabelasComuns.includes(tabela)) {
+            const usuarioId = this.getUsuarioAtivo();
+            const index = todosRegistros.findIndex(reg => reg.id == id && reg.usuarioId === usuarioId);
+            if (index !== -1) {
+                todosRegistros[index] = { ...todosRegistros[index], ...dados, id: parseInt(id), usuarioId: usuarioId };
+                localStorage.setItem(tabela, JSON.stringify(todosRegistros));
+                return todosRegistros[index];
+            }
+        } else {
+            const index = todosRegistros.findIndex(reg => reg.id == id);
+            if (index !== -1) {
+                todosRegistros[index] = { ...todosRegistros[index], ...dados, id: parseInt(id) };
+                localStorage.setItem(tabela, JSON.stringify(todosRegistros));
+                return todosRegistros[index];
+            }
         }
         return null;
     },
 
     // Deletar um registro
     deletar: function(tabela, id) {
-        let registros = this.lerTodos(tabela);
-        registros = registros.filter(reg => reg.id != id);
-        localStorage.setItem(tabela, JSON.stringify(registros));
+        let todosRegistros = JSON.parse(localStorage.getItem(tabela)) || [];
+        
+        if (!this.tabelasComuns.includes(tabela)) {
+            const usuarioId = this.getUsuarioAtivo();
+            todosRegistros = todosRegistros.filter(reg => !(reg.id == id && reg.usuarioId === usuarioId));
+        } else {
+            todosRegistros = todosRegistros.filter(reg => reg.id != id);
+        }
+        
+        localStorage.setItem(tabela, JSON.stringify(todosRegistros));
     }
 };
 

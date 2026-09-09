@@ -29,6 +29,14 @@ var Frequencia = (function() {
         $emptyState.show();
     }
 
+    function inicializarComDados(discId, aulaId) {
+        inicializar();
+        $selectDisc.val(discId);
+        carregarAulas();
+        $selectAula.val(aulaId);
+        carregarChamada();
+    }
+
     // Ao escolher a disciplina, carrega as aulas (planos de aula) dela
     function carregarAulas() {
         const discId = $selectDisc.val();
@@ -125,7 +133,7 @@ var Frequencia = (function() {
             if (status) dadosChamada[alunoId] = status;
         });
 
-        const registro = { chave, disciplinaId: parseInt(discId), aulaId: parseInt(aulaId), dados: dadosChamada };
+        const registro = { id: existenteIdx !== -1 ? registros[existenteIdx].id : null, chave, disciplinaId: parseInt(discId), aulaId: parseInt(aulaId), dados: dadosChamada };
 
         if (existenteIdx !== -1) {
             registros[existenteIdx] = registro;
@@ -135,7 +143,16 @@ var Frequencia = (function() {
         }
 
         localStorage.setItem('frequencias', JSON.stringify(registros));
+
+        // Atualiza status do plano de aula para "ministrada"
+        const plano = BD.lerPorId('planosAula', aulaId);
+        if (plano && plano.status !== 'ministrada') {
+            plano.status = 'ministrada';
+            BD.atualizar('planosAula', aulaId, plano);
+        }
+
         alert('Chamada salva com sucesso!');
+        App.navegarPara('planosAula');
     }
 
     // Gera o QR Code para auto-chamada dos alunos
@@ -163,5 +180,5 @@ var Frequencia = (function() {
     // Inicialização
     inicializar();
 
-    return { inicializar, salvarChamadaOral, gerarQRCode, fecharModalQRCode };
+    return { inicializar, inicializarComDados, salvarChamadaOral, gerarQRCode, fecharModalQRCode };
 })();

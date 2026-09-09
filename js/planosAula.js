@@ -58,6 +58,7 @@ var PlanosAula = (function() {
                     <td>${dataFormatada}</td>
                     <td><i class="fa-solid ${badgeIcone}" style="${badgeClass}"></i> ${plano.status.charAt(0).toUpperCase() + plano.status.slice(1)}</td>
                     <td class="action-btns">
+                        <button class="btn btn-primary" onclick="PlanosAula.abrirModalRegistrar(${plano.id})" title="Registrar Aula"><i class="fa-solid fa-check-to-slot"></i></button>
                         <button class="btn btn-secondary" onclick="PlanosAula.editar(${plano.id})" title="Editar"><i class="fa-solid fa-pen"></i></button>
                         <button class="btn btn-danger" onclick="PlanosAula.excluir(${plano.id})" title="Excluir"><i class="fa-solid fa-trash"></i></button>
                     </td>
@@ -133,11 +134,52 @@ var PlanosAula = (function() {
         }
     }
 
+    // Modal Registrar Aula
+    const $modalRegistrar = $('#modal-registrar-aula');
+    
+    function abrirModalRegistrar(id) {
+        $('#registrar-aula-id').val(id);
+        $modalRegistrar.addClass('active');
+    }
+
+    function fecharModalRegistrar() {
+        $modalRegistrar.removeClass('active');
+    }
+
+    function cancelarAula() {
+        if(confirm('Tem certeza que deseja cancelar esta aula?')) {
+            const id = $('#registrar-aula-id').val();
+            const plano = BD.lerPorId(tabela, id);
+            if (plano) {
+                plano.status = 'cancelada';
+                BD.atualizar(tabela, id, plano);
+                renderizarTabela(plano.disciplinaId);
+                fecharModalRegistrar();
+            }
+        }
+    }
+
+    function irParaFrequencia() {
+        const id = $('#registrar-aula-id').val();
+        const plano = BD.lerPorId(tabela, id);
+        if (plano) {
+            fecharModalRegistrar();
+            // Pass the parameters to the Frequencia module directly
+            App.navegarPara('frequencia');
+            if(typeof Frequencia !== 'undefined') {
+                Frequencia.inicializarComDados(plano.disciplinaId, plano.id);
+            }
+        }
+    }
+
     // Event Listeners
     $form.on('submit', salvar);
 
     // Inicialização
     inicializar();
 
-    return { inicializar, abrirModal, fecharModal, editar, excluir };
+    return { 
+        inicializar, abrirModal, fecharModal, editar, excluir,
+        abrirModalRegistrar, fecharModalRegistrar, cancelarAula, irParaFrequencia
+    };
 })();

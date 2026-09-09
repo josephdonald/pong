@@ -38,6 +38,11 @@ $(document).ready(function() {
         }
     });
 
+    // Proteção de rota
+    if (!localStorage.getItem('sessao_ativa')) {
+        window.location.href = 'login.html';
+    }
+
     // ==============================================================
     // 3. Roteamento SPA - cliques no menu lateral
     // ==============================================================
@@ -45,6 +50,12 @@ $(document).ready(function() {
         e.preventDefault();
         const rota = $(this).data('route');
         App.navegarPara(rota);
+    });
+
+    // Evento de Logout
+    $('#btn-logout').on('click', function() {
+        localStorage.removeItem('sessao_ativa');
+        window.location.href = 'login.html';
     });
 
     // ==============================================================

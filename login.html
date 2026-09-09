@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PONG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --primary-dark: #3730A3;
+            --bg-body: #F3F4F6;
+            --bg-card: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #111827;
+                --bg-card: #1F2937;
+                --text-main: #F9FAFB;
+                --text-muted: #9CA3AF;
+                --border-color: #374151;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .auth-pane {
+            display: none;
+        }
+        .auth-pane.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .auth-links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .auth-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .msg {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            text-align: center;
+        }
+
+        .msg.error {
+            background: #FEE2E2;
+            color: #B91C1C;
+        }
+
+        .msg.success {
+            background: #D1FAE5;
+            color: #047857;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="logo">
+        <i class="fa-solid fa-table-tennis-paddle-ball"></i> PONG
+    </div>
+    
+    <div id="msg-box" class="msg"></div>
+
+    <!-- Login -->
+    <div id="pane-login" class="auth-pane active">
+        <h2 style="margin-top:0; text-align:center;">Bem-vindo</h2>
+        <form id="form-login">
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="login-senha" required>
+            </div>
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+        <div class="auth-links">
+            <a onclick="showPane('pane-recuperar')">Esqueci minha senha</a><br><br>
+            Não tem uma conta? <a onclick="showPane('pane-cadastro')">Cadastre-se</a>
+        </div>
+    </div>
+
+    <!-- Cadastro -->
+    <div id="pane-cadastro" class="auth-pane">
+        <h2 style="margin-top:0; text-align:center;">Criar Conta</h2>
+        <form id="form-cadastro">
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" id="cad-nome" required>
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="cad-email" required>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="cad-senha" required minlength="4">
+            </div>
+            <button type="submit" class="btn">Cadastrar</button>
+        </form>
+        <div class="auth-links">
+            Já possui conta? <a onclick="showPane('pane-login')">Faça Login</a>
+        </div>
+    </div>
+
+    <!-- Recuperar Senha -->
+    <div id="pane-recuperar" class="auth-pane">
+        <h2 style="margin-top:0; text-align:center;">Recuperar Senha</h2>
+        <p style="text-align:center; font-size:0.9rem; color:var(--text-muted); margin-bottom:20px;">
+            Digite seu e-mail para recuperar sua senha.
+        </p>
+        <form id="form-recuperar">
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="rec-email" required>
+            </div>
+            <button type="submit" class="btn">Recuperar</button>
+        </form>
+        <div class="auth-links">
+            <a onclick="showPane('pane-login')">Voltar ao Login</a>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
