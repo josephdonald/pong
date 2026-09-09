@@ -12,7 +12,11 @@ CRUD das turmas com os dados: Turno, código, curso e unidade educacional
 CRUD das disciplinas com os dados associados: alunos,  professor, curso, nome da disciplina, frequência, plano de aula, notas (av1, av2, reposição e final), carga horária e sala.
 CRUD dos cursos com os dados: código(auto incremento), nome do curso, nome do coordenador, escolha da unidade educacional
 CRUD da unidade educacional: código(auto incremento), Nome da unidade, endereço, cidade, uf(siglas Brasil)
+Necessita ter dinâmica no preenchimento dos formulários (buscando os dados de outra tabela)
 No registro das frequências das aulas o professor poderá fazer a chamada oral e marcar as opções presença/ausência/justificada para cada aluno, ou poderá gerar um QRCode onde os próprios alunos leiam o QRCOde com um celular e registrem sua presença através de 2FA com seu e-mail cadastrado.
+A frequência deverá ser acessada através do plano de aula a ela correspondente. Exemplo: nos planos de aula deve existir um botão de registro de aula, ao clica no botão tenho a opção de registrar a frequência ou cancelar a aula. Ao registrar a frequência o software deve abrir a frequência e o professor realizará através de chamada oral ou pelo QrCode. Quando ele finalizar a chamada da frequência o software deverá registrar a aula como ministrada e manter um histórico da frequência vinculada a aula. Essa frequência deverá se manter acessível para possíveis correções por parte do professor.
+
+Necessita ter um dashboard completo sobre os dados do sistema.
 
 # Arquitetura
 Desenvolva utilizando clean code.
