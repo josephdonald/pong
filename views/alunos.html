@@ -1,0 +1,54 @@
+<div class="page-header">
+    <h2><i class="fa-solid fa-user-graduate"></i> Gestão de Alunos</h2>
+    <button class="btn btn-primary" onclick="Alunos.abrirModal()"><i class="fa-solid fa-plus"></i> Novo Aluno</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="alunos-tbody">
+            <!-- Dados dinâmicos aqui -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-aluno">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-aluno-title">Novo Aluno</h3>
+            <button class="close-modal" onclick="Alunos.fecharModal()">&times;</button>
+        </div>
+        <form id="form-aluno">
+            <input type="hidden" id="aluno-id">
+            <div class="form-group">
+                <label for="aluno-matricula">Matrícula</label>
+                <input type="text" id="aluno-matricula" required>
+            </div>
+            <div class="form-group">
+                <label for="aluno-nome">Nome Completo</label>
+                <input type="text" id="aluno-nome" required>
+            </div>
+            <div class="form-group">
+                <label for="aluno-email">E-mail</label>
+                <input type="email" id="aluno-email" required>
+            </div>
+            <div class="form-group">
+                <label for="aluno-telefone">Telefone</label>
+                <input type="text" id="aluno-telefone" required>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" onclick="Alunos.fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>

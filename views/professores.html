@@ -1,0 +1,50 @@
+<div class="page-header">
+    <h2><i class="fa-solid fa-chalkboard-user"></i> Gestão de Professores</h2>
+    <button class="btn btn-primary" onclick="Professores.abrirModal()"><i class="fa-solid fa-plus"></i> Novo Professor</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="professores-tbody">
+            <!-- Dados dinâmicos aqui -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-professor">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-professor-title">Novo Professor</h3>
+            <button class="close-modal" onclick="Professores.fecharModal()">&times;</button>
+        </div>
+        <form id="form-professor">
+            <input type="hidden" id="prof-id">
+            <div class="form-group">
+                <label for="prof-nome">Nome Completo</label>
+                <input type="text" id="prof-nome" required>
+            </div>
+            <div class="form-group">
+                <label for="prof-email">E-mail</label>
+                <input type="email" id="prof-email" required>
+            </div>
+            <div class="form-group">
+                <label for="prof-telefone">Telefone</label>
+                <input type="text" id="prof-telefone" required>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" onclick="Professores.fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>

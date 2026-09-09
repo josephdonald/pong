@@ -1,0 +1,27 @@
+MVP do Sistema de gestão de aluno e aulas (PONG)
+
+# Tecnologias
+Sistemas web utilizando HTML, CSS, JAVASCRIPT e JQuery
+Sem banco de dados no momento
+Se trata de um MVP, utilize dados dinâmicos
+
+# Funcionalidades
+CRUD de usuários do sistema (professores) com os dados: código(auto incremento), nome, e-mail e telefone.
+CRUD  de alunos que serão cadastrados pelos professores no sistema, com os dados: nome, matricula, email e telefone.
+CRUD das turmas com os dados: Turno, código, curso e unidade educacional
+CRUD das disciplinas com os dados associados: alunos,  professor, curso, nome da disciplina, frequência, plano de aula, notas (av1, av2, reposição e final), carga horária e sala.
+CRUD dos cursos com os dados: código(auto incremento), nome do curso, nome do coordenador, escolha da unidade educacional
+CRUD da unidade educacional: código(auto incremento), Nome da unidade, endereço, cidade, uf(siglas Brasil)
+No registro das frequências das aulas o professor poderá fazer a chamada oral e marcar as opções presença/ausência/justificada para cada aluno, ou poderá gerar um QRCode onde os próprios alunos leiam o QRCOde com um celular e registrem sua presença através de 2FA com seu e-mail cadastrado.
+
+# Arquitetura
+Desenvolva utilizando clean code.
+Utilize as português-BR para a nomenclatura das variáveis.
+Faça comentários nos arquivos explicando as suas funcionalidades.
+
+# Frontend
+Utilize um visual focado na usabilidade e dinâmica do sistema
+Paletas de cores em tons: azul, verde e branco
+Possibilidade de modo dark
+
+

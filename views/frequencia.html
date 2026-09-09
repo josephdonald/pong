@@ -1,0 +1,60 @@
+<div class="page-header">
+    <h2><i class="fa-solid fa-clipboard-user"></i> Gestão de Frequência</h2>
+    <div style="display: flex; gap: 15px; align-items: center;">
+        <label for="freq-disciplina" style="font-weight: 500;">Selecione a Disciplina:</label>
+        <select id="freq-disciplina" class="form-group" style="margin-bottom: 0; min-width: 250px;">
+            <!-- Dinâmico -->
+        </select>
+        
+        <label for="freq-data" style="font-weight: 500;">Data:</label>
+        <input type="date" id="freq-data" class="form-group" style="margin-bottom: 0;">
+    </div>
+</div>
+
+<div class="table-container" id="freq-container" style="display: none;">
+    <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+        <h3>Chamada de Alunos</h3>
+        <button class="btn btn-secondary" onclick="Frequencia.gerarQRCode()"><i class="fa-solid fa-qrcode"></i> Gerar QR Code (Auto-Chamada)</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Matrícula</th>
+                <th>Nome</th>
+                <th style="text-align: center;">Presença</th>
+                <th style="text-align: center;">Ausência</th>
+                <th style="text-align: center;">Justificada</th>
+            </tr>
+        </thead>
+        <tbody id="frequencia-tbody">
+            <!-- Dinâmico -->
+        </tbody>
+    </table>
+    <div style="padding: 15px; text-align: right; border-top: 1px solid var(--border-color);">
+        <button class="btn btn-primary" onclick="Frequencia.salvarChamadaOral()">Salvar Chamada Oral</button>
+    </div>
+</div>
+
+<div id="freq-empty-state" style="text-align: center; padding: 50px; color: var(--text-muted);">
+    <i class="fa-solid fa-hand-pointer fa-3x" style="margin-bottom: 15px;"></i>
+    <h3>Selecione uma disciplina e a data para gerenciar a frequência.</h3>
+</div>
+
+<!-- Modal QR Code Simulado -->
+<div class="modal-overlay" id="modal-qrcode">
+    <div class="modal-content" style="text-align: center; max-width: 400px;">
+        <div class="modal-header">
+            <h3>QR Code da Aula</h3>
+            <button class="close-modal" onclick="Frequencia.fecharModalQRCode()">&times;</button>
+        </div>
+        <div style="padding: 20px;">
+            <i class="fa-solid fa-qrcode fa-10x" style="color: var(--text-main); margin-bottom: 20px;"></i>
+            <p style="margin-bottom: 15px;">Peça aos alunos para escanearem o código acima.</p>
+            
+            <div style="background-color: rgba(0,0,0,0.05); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>Link para simulação (MVP):</strong></p>
+                <a id="link-simulacao-qr" href="#" target="_blank" style="color: var(--secondary-color); word-break: break-all;"></a>
+            </div>
+        </div>
+    </div>
+</div>

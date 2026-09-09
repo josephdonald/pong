@@ -1,0 +1,112 @@
+<div class="page-header">
+    <h2><i class="fa-solid fa-book"></i> Gestão de Disciplinas</h2>
+    <button class="btn btn-primary" onclick="Disciplinas.abrirModal()"><i class="fa-solid fa-plus"></i> Nova Disciplina</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Curso</th>
+                <th>Professor</th>
+                <th>Carga Horária</th>
+                <th>Sala</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="disciplinas-tbody">
+            <!-- Dados dinâmicos aqui -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Criar/Editar -->
+<div class="modal-overlay" id="modal-disciplina">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 id="modal-disciplina-title">Nova Disciplina</h3>
+            <button class="close-modal" onclick="Disciplinas.fecharModal()">&times;</button>
+        </div>
+        <form id="form-disciplina">
+            <input type="hidden" id="disc-id">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label for="disc-nome">Nome da Disciplina</label>
+                    <input type="text" id="disc-nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="disc-curso">Curso</label>
+                    <input type="text" id="disc-curso" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label for="disc-prof">Professor</label>
+                    <select id="disc-prof" required>
+                        <!-- Options carregadas via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="disc-sala">Sala</label>
+                    <input type="text" id="disc-sala" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="disc-ch">Carga Horária (h)</label>
+                <input type="number" id="disc-ch" required min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="disc-plano">Plano de Aula</label>
+                <textarea id="disc-plano" rows="3" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--bg-body); color: var(--text-main); font-family: inherit; resize: vertical;" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="disc-alunos">Alunos Matriculados (Segure Ctrl/Cmd para múltiplos)</label>
+                <select id="disc-alunos" multiple style="height: 100px;">
+                    <!-- Options carregadas via JS -->
+                </select>
+            </div>
+
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" onclick="Disciplinas.fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Notas (Simplificado) -->
+<div class="modal-overlay" id="modal-notas">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3>Lançamento de Notas - <span id="notas-disc-nome"></span></h3>
+            <button class="close-modal" onclick="Disciplinas.fecharModalNotas()">&times;</button>
+        </div>
+        <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th style="width: 80px;">AV1</th>
+                        <th style="width: 80px;">AV2</th>
+                        <th style="width: 80px;">Reposição</th>
+                        <th style="width: 80px;">Final</th>
+                    </tr>
+                </thead>
+                <tbody id="notas-tbody">
+                    <!-- Dinâmico -->
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="button" class="btn" onclick="Disciplinas.fecharModalNotas()">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="Disciplinas.salvarNotas()">Salvar Notas</button>
+        </div>
+    </div>
+</div>

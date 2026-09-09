@@ -1,0 +1,60 @@
+<div class="page-header">
+    <h2><i class="fa-solid fa-people-group"></i> Gestão de Turmas</h2>
+    <button class="btn btn-primary" onclick="Turmas.abrirModal()"><i class="fa-solid fa-plus"></i> Nova Turma</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Curso</th>
+                <th>Turno</th>
+                <th>Unidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="turmas-tbody">
+            <!-- Dados dinâmicos aqui -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-turma">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-turma-title">Nova Turma</h3>
+            <button class="close-modal" onclick="Turmas.fecharModal()">&times;</button>
+        </div>
+        <form id="form-turma">
+            <input type="hidden" id="turma-id">
+            <div class="form-group">
+                <label for="turma-codigo">Código da Turma</label>
+                <input type="text" id="turma-codigo" required placeholder="Ex: TMA01">
+            </div>
+            <div class="form-group">
+                <label for="turma-curso">Curso</label>
+                <input type="text" id="turma-curso" required>
+            </div>
+            <div class="form-group">
+                <label for="turma-turno">Turno</label>
+                <select id="turma-turno" required>
+                    <option value="">Selecione...</option>
+                    <option value="Matutino">Matutino</option>
+                    <option value="Vespertino">Vespertino</option>
+                    <option value="Noturno">Noturno</option>
+                    <option value="Integral">Integral</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="turma-unidade">Unidade Educacional</label>
+                <input type="text" id="turma-unidade" required>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" onclick="Turmas.fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>

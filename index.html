@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONG - Sistema de Gestão de Alunos e Aulas</title>
+    <meta name="description" content="Sistema de Gestão de Alunos e Aulas - PONG MVP">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+                <h2>PONG</h2>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#" data-route="dashboard" class="active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li class="nav-separator">CADASTROS</li>
+                <li><a href="#" data-route="professores"><i class="fa-solid fa-chalkboard-user"></i> Professores</a></li>
+                <li><a href="#" data-route="alunos"><i class="fa-solid fa-user-graduate"></i> Alunos</a></li>
+                <li><a href="#" data-route="unidades"><i class="fa-solid fa-building"></i> Unidades</a></li>
+                <li><a href="#" data-route="cursos"><i class="fa-solid fa-graduation-cap"></i> Cursos</a></li>
+                <li><a href="#" data-route="turmas"><i class="fa-solid fa-people-group"></i> Turmas</a></li>
+                <li><a href="#" data-route="disciplinas"><i class="fa-solid fa-book"></i> Disciplinas</a></li>
+                <li class="nav-separator">PEDAGÓGICO</li>
+                <li><a href="#" data-route="planosAula"><i class="fa-solid fa-calendar-days"></i> Planos de Aula</a></li>
+                <li><a href="#" data-route="frequencia"><i class="fa-solid fa-clipboard-user"></i> Frequência</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="theme-toggle">
+                <i class="fa-solid fa-moon"></i>
+                <span class="toggle-label">Modo Escuro</span>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main-content">
+        <header class="topbar">
+            <button id="mobile-menu-btn" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <div class="user-info">
+                <span class="user-name">Administrador</span>
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+            </div>
+        </header>
+
+        <div id="content-area" class="content-area">
+
+            <!-- ================================================ -->
+            <!-- VIEW: DASHBOARD                                   -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-dashboard">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-chart-line"></i> Dashboard</h2>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:20px; margin-bottom:30px;">
+                    <div class="card" style="border-left:4px solid var(--primary-color);">
+                        <h3>Alunos</h3>
+                        <p id="dash-alunos" style="font-size:2.5rem;font-weight:bold;color:var(--primary-color);">0</p>
+                    </div>
+                    <div class="card" style="border-left:4px solid var(--secondary-color);">
+                        <h3>Professores</h3>
+                        <p id="dash-professores" style="font-size:2.5rem;font-weight:bold;color:var(--secondary-color);">0</p>
+                    </div>
+                    <div class="card" style="border-left:4px solid var(--warning);">
+                        <h3>Turmas</h3>
+                        <p id="dash-turmas" style="font-size:2.5rem;font-weight:bold;color:var(--warning);">0</p>
+                    </div>
+                    <div class="card" style="border-left:4px solid var(--danger);">
+                        <h3>Disciplinas</h3>
+                        <p id="dash-disciplinas" style="font-size:2.5rem;font-weight:bold;color:var(--danger);">0</p>
+                    </div>
+                    <div class="card" style="border-left:4px solid var(--primary-dark);">
+                        <h3>Cursos</h3>
+                        <p id="dash-cursos" style="font-size:2.5rem;font-weight:bold;color:var(--primary-dark);">0</p>
+                    </div>
+                    <div class="card" style="border-left:4px solid var(--secondary-dark);">
+                        <h3>Unidades</h3>
+                        <p id="dash-unidades" style="font-size:2.5rem;font-weight:bold;color:var(--secondary-dark);">0</p>
+                    </div>
+                </div>
+                <h3 style="margin-bottom:15px;">Acesso Rápido</h3>
+                <div class="dashboard-cards">
+                    <div class="card" onclick="App.navegarPara('professores')"><i class="fa-solid fa-chalkboard-user"></i><h3>Professores</h3></div>
+                    <div class="card" onclick="App.navegarPara('alunos')"><i class="fa-solid fa-user-graduate"></i><h3>Alunos</h3></div>
+                    <div class="card" onclick="App.navegarPara('disciplinas')"><i class="fa-solid fa-book"></i><h3>Disciplinas</h3></div>
+                    <div class="card" onclick="App.navegarPara('planosAula')"><i class="fa-solid fa-calendar-days"></i><h3>Planos de Aula</h3></div>
+                    <div class="card" onclick="App.navegarPara('frequencia')"><i class="fa-solid fa-clipboard-user"></i><h3>Frequência</h3></div>
+                </div>
+            </div><!-- /view-dashboard -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: PROFESSORES                                 -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-professores" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-chalkboard-user"></i> Professores</h2>
+                    <button class="btn btn-primary" onclick="Professores.abrirModal()"><i class="fa-solid fa-plus"></i> Novo Professor</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Código</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Ações</th></tr></thead>
+                        <tbody id="professores-tbody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-overlay" id="modal-professor">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-professor-title">Novo Professor</h3>
+                            <button class="close-modal" onclick="Professores.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-professor">
+                            <input type="hidden" id="prof-id">
+                            <div class="form-group"><label>Nome Completo</label><input type="text" id="prof-nome" required></div>
+                            <div class="form-group"><label>E-mail</label><input type="email" id="prof-email" required></div>
+                            <div class="form-group"><label>Telefone</label><input type="text" id="prof-telefone" required></div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="Professores.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /view-professores -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: ALUNOS                                      -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-alunos" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-user-graduate"></i> Alunos</h2>
+                    <button class="btn btn-primary" onclick="Alunos.abrirModal()"><i class="fa-solid fa-plus"></i> Novo Aluno</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Matrícula</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Ações</th></tr></thead>
+                        <tbody id="alunos-tbody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-overlay" id="modal-aluno">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-aluno-title">Novo Aluno</h3>
+                            <button class="close-modal" onclick="Alunos.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-aluno">
+                            <input type="hidden" id="aluno-id">
+                            <div class="form-group"><label>Matrícula</label><input type="text" id="aluno-matricula" required></div>
+                            <div class="form-group"><label>Nome Completo</label><input type="text" id="aluno-nome" required></div>
+                            <div class="form-group"><label>E-mail</label><input type="email" id="aluno-email" required></div>
+                            <div class="form-group"><label>Telefone</label><input type="text" id="aluno-telefone" required></div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="Alunos.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /view-alunos -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: UNIDADES EDUCACIONAIS                       -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-unidades" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-building"></i> Unidades Educacionais</h2>
+                    <button class="btn btn-primary" onclick="Unidades.abrirModal()"><i class="fa-solid fa-plus"></i> Nova Unidade</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Código</th><th>Nome</th><th>Endereço</th><th>Cidade / UF</th><th>Ações</th></tr></thead>
+                        <tbody id="unidades-tbody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-overlay" id="modal-unidade">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-unidade-title">Nova Unidade</h3>
+                            <button class="close-modal" onclick="Unidades.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-unidade">
+                            <input type="hidden" id="uni-id">
+                            <div class="form-group"><label>Nome da Unidade</label><input type="text" id="uni-nome" required></div>
+                            <div class="form-group"><label>Endereço</label><input type="text" id="uni-endereco" required></div>
+                            <div style="display:grid;grid-template-columns:2fr 1fr;gap:15px;">
+                                <div class="form-group"><label>Cidade</label><input type="text" id="uni-cidade" required></div>
+                                <div class="form-group">
+                                    <label>UF</label>
+                                    <select id="uni-uf" required>
+                                        <option value="">UF</option>
+                                        <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+                                        <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+                                        <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+                                        <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+                                        <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                                        <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+                                        <option selected>SP</option><option>SE</option><option>TO</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="Unidades.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /view-unidades -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: CURSOS                                      -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-cursos" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-graduation-cap"></i> Cursos</h2>
+                    <button class="btn btn-primary" onclick="Cursos.abrirModal()"><i class="fa-solid fa-plus"></i> Novo Curso</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Código</th><th>Nome do Curso</th><th>Coordenador</th><th>Unidade</th><th>Ações</th></tr></thead>
+                        <tbody id="cursos-tbody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-overlay" id="modal-curso">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-curso-title">Novo Curso</h3>
+                            <button class="close-modal" onclick="Cursos.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-curso">
+                            <input type="hidden" id="cur-id">
+                            <div class="form-group"><label>Nome do Curso</label><input type="text" id="cur-nome" required></div>
+                            <div class="form-group"><label>Nome do Coordenador</label><input type="text" id="cur-coord" required></div>
+                            <div class="form-group"><label>Unidade Educacional</label><select id="cur-unidade" required></select></div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="Cursos.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /view-cursos -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: TURMAS                                      -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-turmas" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-people-group"></i> Turmas</h2>
+                    <button class="btn btn-primary" onclick="Turmas.abrirModal()"><i class="fa-solid fa-plus"></i> Nova Turma</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Código</th><th>Curso</th><th>Turno</th><th>Unidade</th><th>Ações</th></tr></thead>
+                        <tbody id="turmas-tbody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-overlay" id="modal-turma">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-turma-title">Nova Turma</h3>
+                            <button class="close-modal" onclick="Turmas.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-turma">
+                            <input type="hidden" id="turma-id">
+                            <div class="form-group"><label>Código da Turma</label><input type="text" id="turma-codigo" required placeholder="Ex: TMA01"></div>
+                            <div class="form-group"><label>Curso</label><select id="turma-curso" required></select></div>
+                            <div class="form-group">
+                                <label>Turno</label>
+                                <select id="turma-turno" required>
+                                    <option value="">Selecione...</option>
+                                    <option>Matutino</option><option>Vespertino</option>
+                                    <option>Noturno</option><option>Integral</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Unidade Educacional</label><select id="turma-unidade" required></select></div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="Turmas.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /view-turmas -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: DISCIPLINAS                                 -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-disciplinas" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-book"></i> Disciplinas</h2>
+                    <button class="btn btn-primary" onclick="Disciplinas.abrirModal()"><i class="fa-solid fa-plus"></i> Nova Disciplina</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th><th>Nome</th><th>Curso</th><th>Turma</th>
+                                <th>Professor</th><th>C/H</th><th>Horário</th><th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="disciplinas-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Modal Disciplina -->
+                <div class="modal-overlay" id="modal-disciplina">
+                    <div class="modal-content" style="max-width:620px;">
+                        <div class="modal-header">
+                            <h3 id="modal-disciplina-title">Nova Disciplina</h3>
+                            <button class="close-modal" onclick="Disciplinas.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-disciplina">
+                            <input type="hidden" id="disc-id">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                                <div class="form-group"><label>Nome da Disciplina</label><input type="text" id="disc-nome" required></div>
+                                <div class="form-group"><label>Sala</label><input type="text" id="disc-sala" required></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                                <div class="form-group"><label>Curso</label><select id="disc-curso" required></select></div>
+                                <div class="form-group"><label>Turma</label><select id="disc-turma" required></select></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                                <div class="form-group"><label>Professor</label><select id="disc-prof" required></select></div>
+                                <div class="form-group"><label>Carga Horária (h)</label><input type="number" id="disc-ch" required min="1"></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                                <div class="form-group"><label>Horário de Início</label><input type="time" id="disc-horario-inicio"></div>
+                                <div class="form-group"><label>Horário de Fim</label><input type="time" id="disc-horario-fim"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Descrição / Ementa</label>
+                                <textarea id="disc-descricao" rows="3" style="width:100%;padding:10px;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-body);color:var(--text-main);font-family:inherit;resize:vertical;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Alunos Matriculados <small>(Ctrl/Cmd para múltiplos)</small></label>
+                                <select id="disc-alunos" multiple style="height:100px;"></select>
+                            </div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="Disciplinas.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- /modal-disciplina -->
+
+                <!-- Modal Notas -->
+                <div class="modal-overlay" id="modal-notas">
+                    <div class="modal-content" style="max-width:800px;">
+                        <div class="modal-header">
+                            <h3>Notas — <span id="notas-disc-nome"></span></h3>
+                            <button class="close-modal" onclick="Disciplinas.fecharModalNotas()">&times;</button>
+                        </div>
+                        <div class="table-container" style="max-height:400px;overflow-y:auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Aluno</th>
+                                        <th style="width:80px;">AV1</th>
+                                        <th style="width:80px;">AV2</th>
+                                        <th style="width:80px;">Reposição</th>
+                                        <th style="width:80px;">Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="notas-tbody"></tbody>
+                            </table>
+                        </div>
+                        <div style="text-align:right;margin-top:20px;">
+                            <button type="button" class="btn" onclick="Disciplinas.fecharModalNotas()">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="Disciplinas.salvarNotas()">Salvar Notas</button>
+                        </div>
+                    </div>
+                </div><!-- /modal-notas -->
+            </div><!-- /view-disciplinas -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: PLANOS DE AULA                             -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-planosAula" style="display:none;">
+                <div class="page-header">
+                    <h2><i class="fa-solid fa-calendar-days"></i> Planos de Aula</h2>
+                    <div style="display:flex;gap:15px;align-items:center;">
+                        <label style="font-weight:500;">Disciplina:</label>
+                        <select id="plano-disciplina" style="min-width:250px;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-body);color:var(--text-main);"></select>
+                        <button class="btn btn-primary" onclick="PlanosAula.abrirModal()"><i class="fa-solid fa-plus"></i> Nova Aula</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>#</th><th>Título da Aula</th><th>Data</th><th>Status</th><th>Ações</th></tr></thead>
+                        <tbody id="planosAula-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Modal Plano de Aula -->
+                <div class="modal-overlay" id="modal-plano-aula">
+                    <div class="modal-content" style="max-width:550px;">
+                        <div class="modal-header">
+                            <h3 id="modal-plano-title">Nova Aula</h3>
+                            <button class="close-modal" onclick="PlanosAula.fecharModal()">&times;</button>
+                        </div>
+                        <form id="form-plano-aula">
+                            <input type="hidden" id="plano-id">
+                            <input type="hidden" id="plano-disc-id">
+                            <div class="form-group"><label>Título da Aula</label><input type="text" id="plano-titulo" required placeholder="Ex: Aula 01 - Introdução"></div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                                <div class="form-group"><label>Data da Aula</label><input type="date" id="plano-data" required></div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select id="plano-status" required>
+                                        <option value="agendada">Agendada</option>
+                                        <option value="ministrada">Ministrada</option>
+                                        <option value="cancelada">Cancelada</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Descrição / Conteúdo</label>
+                                <textarea id="plano-descricao" rows="4" style="width:100%;padding:10px;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-body);color:var(--text-main);font-family:inherit;resize:vertical;" placeholder="Descreva o conteúdo que será abordado nesta aula..."></textarea>
+                            </div>
+                            <div style="text-align:right;margin-top:20px;">
+                                <button type="button" class="btn" onclick="PlanosAula.fecharModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- /modal-plano-aula -->
+            </div><!-- /view-planosAula -->
+
+
+            <!-- ================================================ -->
+            <!-- VIEW: FREQUÊNCIA                                  -->
+            <!-- ================================================ -->
+            <div class="view-section" id="view-frequencia" style="display:none;">
+                <div class="page-header" style="flex-wrap:wrap;gap:10px;">
+                    <h2><i class="fa-solid fa-clipboard-user"></i> Frequência</h2>
+                    <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+                        <label style="font-weight:500;">Disciplina:</label>
+                        <select id="freq-disciplina" style="min-width:220px;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-body);color:var(--text-main);"></select>
+                        <label style="font-weight:500;">Aula:</label>
+                        <select id="freq-aula" style="min-width:250px;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-body);color:var(--text-main);"></select>
+                    </div>
+                </div>
+
+                <div class="table-container" id="freq-container" style="display:none;">
+                    <div style="padding:15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);">
+                        <div>
+                            <h3>Chamada de Alunos</h3>
+                            <small id="freq-info-aula" style="color:var(--text-muted);"></small>
+                        </div>
+                        <button class="btn btn-secondary" onclick="Frequencia.gerarQRCode()"><i class="fa-solid fa-qrcode"></i> Gerar QR Code</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th><th>Nome</th>
+                                <th style="text-align:center;">Presença</th>
+                                <th style="text-align:center;">Ausência</th>
+                                <th style="text-align:center;">Justificada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="frequencia-tbody"></tbody>
+                    </table>
+                    <div style="padding:15px;text-align:right;border-top:1px solid var(--border-color);">
+                        <button class="btn btn-primary" onclick="Frequencia.salvarChamadaOral()">
+                            <i class="fa-solid fa-floppy-disk"></i> Salvar Chamada Oral
+                        </button>
+                    </div>
+                </div>
+
+                <div id="freq-empty-state" style="text-align:center;padding:50px;color:var(--text-muted);">
+                    <i class="fa-solid fa-hand-pointer fa-3x" style="margin-bottom:15px;"></i>
+                    <h3>Selecione a disciplina e a aula para iniciar a chamada.</h3>
+                </div>
+
+                <!-- Modal QR Code -->
+                <div class="modal-overlay" id="modal-qrcode">
+                    <div class="modal-content" style="text-align:center;max-width:420px;">
+                        <div class="modal-header">
+                            <h3>QR Code da Aula</h3>
+                            <button class="close-modal" onclick="Frequencia.fecharModalQRCode()">&times;</button>
+                        </div>
+                        <div style="padding:20px;">
+                            <i class="fa-solid fa-qrcode fa-10x" style="color:var(--text-main);margin-bottom:20px;"></i>
+                            <p>Peça aos alunos que escaneiem o código.</p>
+                            <div style="background:rgba(0,0,0,0.05);padding:15px;border-radius:8px;margin-top:20px;">
+                                <p style="font-size:.9rem;margin-bottom:8px;"><strong>Link (simulação MVP):</strong></p>
+                                <a id="link-simulacao-qr" href="#" target="_blank" style="color:var(--secondary-color);word-break:break-all;font-size:.85rem;"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /view-frequencia -->
+
+        </div><!-- /content-area -->
+    </main>
+
+</div><!-- /app-container -->
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="js/bancoDadosMock.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/professores.js"></script>
+<script src="js/alunos.js"></script>
+<script src="js/unidades.js"></script>
+<script src="js/cursos.js"></script>
+<script src="js/turmas.js"></script>
+<script src="js/disciplinas.js"></script>
+<script src="js/planosAula.js"></script>
+<script src="js/frequencia.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Presença - PONG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #005005;
+            --bg-body: #f4f6f8;
+            --bg-surface: #ffffff;
+            --text-main: #333333;
+            --border-color: #e0e0e0;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background-color: var(--bg-surface);
+            padding: 40px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        h2 { margin-bottom: 10px; font-size: 1.5rem; }
+        p.subtitle { color: #666; margin-bottom: 30px; font-size: 0.95rem; }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        #mensagem-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .msg-success { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .msg-error { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="logo">
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+            <strong>PONG</strong>
+        </div>
+        <h2>Registro de Presença</h2>
+        <p class="subtitle" id="info-aula">Carregando informações da aula...</p>
+
+        <form id="form-auth">
+            <div class="form-group">
+                <label for="aluno-matricula">Matrícula</label>
+                <input type="text" id="aluno-matricula" required placeholder="Sua matrícula">
+            </div>
+            <div class="form-group">
+                <label for="aluno-email">E-mail (2FA Auth)</label>
+                <input type="email" id="aluno-email" required placeholder="Seu e-mail cadastrado">
+            </div>
+            
+            <button type="submit" class="btn" id="btn-submit">Confirmar Presença</button>
+        </form>
+
+        <div id="mensagem-box"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="js/bancoDadosMock.js"></script>
+    <script src="js/aluno-auth.js"></script>
+</body>
+</html>
