@@ -8,7 +8,6 @@ var Frequencia = (function() {
     const $emptyState = $('#freq-empty-state');
     const $infoAula   = $('#freq-info-aula');
     const $tbody      = $('#frequencia-tbody');
-    const $modalQR    = $('#modal-qrcode');
 
     // Inicializa os selects de disciplina. Chamado toda vez que a view é aberta.
     function inicializar() {
@@ -156,29 +155,32 @@ var Frequencia = (function() {
     }
 
     // Gera o QR Code para auto-chamada dos alunos
-    function gerarQRCode() {
+    function gerarQRCode(event) {
         const discId = $selectDisc.val();
         const aulaId = $selectAula.val();
         if (!discId || !aulaId) {
             alert('Selecione a disciplina e a aula primeiro.');
-            return;
+            return false;
         }
 
         let urlBase = window.location.href.split('index.html')[0];
         if (!urlBase.endsWith('/')) urlBase += '/';
         const urlCompleta = `${urlBase}aluno-auth.html?disc=${discId}&aula=${aulaId}`;
+        const disciplina = BD.lerPorId('disciplinas', discId);
+        const aula = BD.lerPorId('planosAula', aulaId);
+        const parametros = new URLSearchParams({
+            url: urlCompleta,
+            disciplina: disciplina.nome,
+            aula: aula.titulo,
+            data: aula.data
+        });
 
-        $('#link-simulacao-qr').attr('href', urlCompleta).text(urlCompleta);
-        $modalQR.addClass('active');
-    }
-
-    function fecharModalQRCode() {
-        $modalQR.removeClass('active');
-        carregarChamada();
+        event.currentTarget.href = `${new URL('qr-projecao.html', window.location.href)}?${parametros.toString()}`;
+        return true;
     }
 
     // Inicialização
     inicializar();
 
-    return { inicializar, inicializarComDados, salvarChamadaOral, gerarQRCode, fecharModalQRCode };
+    return { inicializar, inicializarComDados, salvarChamadaOral, gerarQRCode };
 })();

@@ -9,6 +9,7 @@ var Disciplinas = (function() {
     const $modalNotas = $('#modal-notas');
     
     let disciplinaAtualId = null;
+    let alunosVinculadosIds = [];
 
     // Renderiza a tabela de disciplinas com dados relacionados
     function renderizarTabela() {
@@ -67,9 +68,7 @@ var Disciplinas = (function() {
         $selectTurma.empty().append('<option value="">Selecione uma Turma...</option>');
         turmas.forEach(t => $selectTurma.append(`<option value="${t.id}">${t.codigo} - ${t.turno}</option>`));
 
-        const $selectAlunos = $('#disc-alunos');
-        $selectAlunos.empty();
-        alunos.forEach(a => $selectAlunos.append(`<option value="${a.id}">${a.matricula} - ${a.nome}</option>`));
+        $('#disc-aluno-disponivel').empty();
     }
 
     // Abre o modal de criação/edição
@@ -77,6 +76,9 @@ var Disciplinas = (function() {
         $form[0].reset();
         $('#disc-id').val('');
         $('#modal-disciplina-title').text('Nova Disciplina');
+        alunosVinculadosIds = [];
+        $('#disc-novo-aluno').prop('hidden', true).find('input').prop('disabled', true).val('');
+        $('#disc-toggle-novo-aluno').attr('aria-expanded', 'false');
         carregarSelects();
 
         if (id) {
@@ -91,11 +93,12 @@ var Disciplinas = (function() {
                 $('#disc-horario-inicio').val(reg.horarioInicio || '');
                 $('#disc-horario-fim').val(reg.horarioFim || '');
                 $('#disc-descricao').val(reg.descricao || '');
-                $('#disc-alunos').val(reg.alunosIds || []);
+                alunosVinculadosIds = Array.isArray(reg.alunosIds) ? [...reg.alunosIds] : [];
                 $('#modal-disciplina-title').text('Editar Disciplina');
             }
         }
 
+        renderizarAlunosVinculados();
         $modal.addClass('active');
     }
 
@@ -104,12 +107,97 @@ var Disciplinas = (function() {
         $modal.removeClass('active');
     }
 
+    function renderizarAlunosVinculados() {
+        const $lista = $('#disc-alunos-vinculados').empty();
+        const alunos = BD.lerTodos('alunos');
+        const idsVinculados = new Set(alunosVinculadosIds.map(String));
+        const alunosVinculados = alunos.filter(aluno => idsVinculados.has(String(aluno.id)));
+        const $disponiveis = $('#disc-aluno-disponivel').empty();
+        const alunosDisponiveis = alunos.filter(aluno => !idsVinculados.has(String(aluno.id)));
+
+        if (alunosDisponiveis.length === 0) {
+            $disponiveis.append('<option value="">Todos os alunos já estão vinculados</option>');
+        } else {
+            $disponiveis.append('<option value="">Selecione um aluno...</option>');
+            alunosDisponiveis.forEach(aluno => {
+                $disponiveis.append(`<option value="${aluno.id}">${aluno.matricula} - ${aluno.nome}</option>`);
+            });
+        }
+
+        if (alunosVinculados.length === 0) {
+            $lista.append($('<li>').text('Nenhum aluno vinculado.'));
+            return;
+        }
+
+        alunosVinculados.forEach(aluno => {
+            const alunoId = aluno.id;
+            const nomeAluno = `${aluno.matricula} - ${aluno.nome}`;
+            const $item = $('<li>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', padding: '6px 0' });
+            const $remover = $('<button>', {
+                type: 'button',
+                class: 'btn btn-danger',
+                title: `Remover ${nomeAluno} apenas desta disciplina`,
+                'aria-label': `Remover ${nomeAluno} apenas desta disciplina`
+            }).append('<i class="fa-solid fa-user-minus"></i>');
+
+            $item.append($('<span>').text(nomeAluno), $remover);
+            $remover.on('click', function() {
+                if (!confirm(`Remover ${nomeAluno} apenas desta disciplina? O aluno continuará na lista geral.`)) return;
+
+                alunosVinculadosIds = alunosVinculadosIds.filter(id => id != alunoId);
+                renderizarAlunosVinculados();
+            });
+            $lista.append($item);
+        });
+    }
+
+    function vincularAlunoExistente() {
+        const alunoId = parseInt($('#disc-aluno-disponivel').val());
+        if (!alunoId || alunosVinculadosIds.some(id => id == alunoId)) return;
+
+        alunosVinculadosIds.push(alunoId);
+        renderizarAlunosVinculados();
+    }
+
+    function alternarCadastroAluno() {
+        const $cadastro = $('#disc-novo-aluno');
+        const mostrar = $cadastro.prop('hidden');
+        $cadastro.prop('hidden', !mostrar);
+        $cadastro.find('input').prop('disabled', !mostrar);
+        $('#disc-toggle-novo-aluno').attr('aria-expanded', String(mostrar));
+
+        if (mostrar) $('#disc-novo-aluno-nome').trigger('focus');
+    }
+
+    function adicionarAluno() {
+        const $campos = $('#disc-novo-aluno input');
+        for (const campo of $campos.toArray()) {
+            if (!campo.reportValidity()) return;
+        }
+
+        const aluno = BD.criar('alunos', {
+            matricula: $('#disc-novo-aluno-matricula').val().trim(),
+            nome: $('#disc-novo-aluno-nome').val().trim(),
+            email: $('#disc-novo-aluno-email').val().trim(),
+            telefone: $('#disc-novo-aluno-telefone').val().trim()
+        });
+
+        alunosVinculadosIds.push(aluno.id);
+        renderizarAlunosVinculados();
+
+        if (typeof Alunos !== 'undefined') Alunos.atualizarTabela();
+
+        $('#disc-novo-aluno').prop('hidden', true);
+        $campos.prop('disabled', true).val('');
+        $('#disc-toggle-novo-aluno').attr('aria-expanded', 'false');
+    }
+
     // Salva (cria ou atualiza) uma disciplina
     function salvar(e) {
         e.preventDefault();
         
         const id = $('#disc-id').val();
-        const alunosSelecionados = ($('#disc-alunos').val() || []).map(val => parseInt(val));
+        const alunosSelecionados = [...alunosVinculadosIds];
 
         const registroAnterior = id ? BD.lerPorId(tabela, id) : {};
 
@@ -216,6 +304,7 @@ var Disciplinas = (function() {
 
     return {
         abrirModal, fecharModal, editar, excluir,
-        abrirModalNotas, fecharModalNotas, salvarNotas
+        abrirModalNotas, fecharModalNotas, salvarNotas,
+        alternarCadastroAluno, adicionarAluno, vincularAlunoExistente
     };
 })();

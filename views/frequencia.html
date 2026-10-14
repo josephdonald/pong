@@ -14,7 +14,7 @@
 <div class="table-container" id="freq-container" style="display: none;">
     <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
         <h3>Chamada de Alunos</h3>
-        <button class="btn btn-secondary" onclick="Frequencia.gerarQRCode()"><i class="fa-solid fa-qrcode"></i> Gerar QR Code (Auto-Chamada)</button>
+        <a class="btn btn-secondary" href="#" target="_blank" rel="noopener" onclick="return Frequencia.gerarQRCode(event)"><i class="fa-solid fa-qrcode"></i> Gerar QR Code (Auto-Chamada)</a>
     </div>
     <table>
         <thead>
@@ -40,21 +40,3 @@
     <h3>Selecione uma disciplina e a data para gerenciar a frequência.</h3>
 </div>
 
-<!-- Modal QR Code Simulado -->
-<div class="modal-overlay" id="modal-qrcode">
-    <div class="modal-content" style="text-align: center; max-width: 400px;">
-        <div class="modal-header">
-            <h3>QR Code da Aula</h3>
-            <button class="close-modal" onclick="Frequencia.fecharModalQRCode()">&times;</button>
-        </div>
-        <div style="padding: 20px;">
-            <i class="fa-solid fa-qrcode fa-10x" style="color: var(--text-main); margin-bottom: 20px;"></i>
-            <p style="margin-bottom: 15px;">Peça aos alunos para escanearem o código acima.</p>
-            
-            <div style="background-color: rgba(0,0,0,0.05); padding: 15px; border-radius: 8px; margin-top: 20px;">
-                <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>Link para simulação (MVP):</strong></p>
-                <a id="link-simulacao-qr" href="#" target="_blank" style="color: var(--secondary-color); word-break: break-all;"></a>
-            </div>
-        </div>
-    </div>
-</div>

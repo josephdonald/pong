@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code da aula</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #eef3f1;
+            color: #182522;
+            font-family: "Trebuchet MS", sans-serif;
+        }
+        main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 36px;
+            text-align: center;
+        }
+        .brand {
+            color: #087f6e;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        h1 {
+            max-width: 900px;
+            margin: 0;
+            font-size: 38px;
+        }
+        #aula {
+            margin: 0;
+            color: #4b5b57;
+            font-size: 22px;
+        }
+        .qr-frame {
+            width: min(62vh, 560px);
+            height: min(62vh, 560px);
+            min-width: 280px;
+            min-height: 280px;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid #d2dcda;
+        }
+        #qr-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #qr-error {
+            display: none;
+            align-content: center;
+            height: 100%;
+            color: #8b3428;
+            font-size: 20px;
+        }
+        .instructions {
+            margin: 0;
+            font-size: 23px;
+            font-weight: 700;
+        }
+        #qr-link {
+            max-width: 1000px;
+            color: #087f6e;
+            font-size: 15px;
+            overflow-wrap: anywhere;
+        }
+        button {
+            padding: 12px 20px;
+            border: 0;
+            background: #087f6e;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            main { gap: 16px; padding: 20px; }
+            h1 { font-size: 30px; }
+            #aula { font-size: 19px; }
+            .qr-frame { width: min(75vw, 420px); height: min(75vw, 420px); }
+        }
+        @media print {
+            body { background: #fff; }
+            main { min-height: auto; }
+            button { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="brand">PONG · FREQUÊNCIA</div>
+        <h1 id="disciplina"></h1>
+        <p id="aula"></p>
+        <div class="qr-frame">
+            <img id="qr-image" alt="QR Code para registrar presença">
+            <div id="qr-error">Não foi possível carregar o QR Code. Use o link abaixo.</div>
+        </div>
+        <p class="instructions">Escaneie para registrar sua presença</p>
+        <a id="qr-link"></a>
+        <button id="print-button" type="button">Imprimir QR Code</button>
+    </main>
+    <script>
+        const parametros = new URLSearchParams(window.location.search);
+        const destino = parametros.get('url');
+        const disciplina = parametros.get('disciplina') || 'Frequência';
+        const aula = parametros.get('aula') || '';
+        const data = parametros.get('data');
+
+        document.title = `QR Code - ${disciplina}`;
+        document.getElementById('disciplina').textContent = disciplina;
+        document.getElementById('aula').textContent = data
+            ? `${aula} · ${new Date(`${data}T00:00:00`).toLocaleDateString('pt-BR')}`
+            : aula;
+
+        const link = document.getElementById('qr-link');
+        const imagem = document.getElementById('qr-image');
+        if (destino) {
+            const destinoUrl = new URL(destino);
+            if (!['http:', 'https:', 'file:'].includes(destinoUrl.protocol)) {
+                throw new Error('Endereço de destino inválido.');
+            }
+            link.href = destinoUrl.href;
+            link.textContent = destinoUrl.href;
+            const gerador = new URL('https://api.qrserver.com/v1/create-qr-code/');
+            gerador.search = new URLSearchParams({ size: '640x640', margin: '10', data: destinoUrl.href });
+            imagem.src = gerador.href;
+            imagem.addEventListener('error', () => {
+                imagem.hidden = true;
+                document.getElementById('qr-error').style.display = 'grid';
+            });
+        } else {
+            imagem.hidden = true;
+            document.getElementById('qr-error').style.display = 'grid';
+            link.textContent = 'Endereço de presença indisponível.';
+        }
+
+        document.getElementById('print-button').addEventListener('click', () => window.print());
+    </script>
+</body>
+</html>

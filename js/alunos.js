@@ -100,6 +100,7 @@ var Alunos = (function() {
         abrirModal: abrirModal,
         fecharModal: fecharModal,
         editar: editar,
-        excluir: excluir
+        excluir: excluir,
+        atualizarTabela: renderizarTabela
     };
 })();
